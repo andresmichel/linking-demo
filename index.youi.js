@@ -52,7 +52,7 @@ const YiReactApp = () => {
       <LinkButton
         title="Prime Video"
         onPress={() => {
-          Linking.openURL(getPrimeURL("B07BYSTXMF"));
+          Linking.openURL(getPrimeURL("amzn1.dv.gti.8ab6ff1b-f125-99f1-940c-521d57520e24"));
         }}
       />
       <LinkButton
