@@ -13,22 +13,60 @@ import { DeviceInfo, Linking } from "@youi/react-native-youi";
 
 const platform = DeviceInfo.getSystemName();
 
+const tizenAppIDs = {
+  prime: "org.tizen.primevideo",
+  hbo: "cj37Ni3qXM.HBONow",
+  youtube: "9Ur5IzDKqV.TizenYouTube",
+  netflix: "org.tizen.netflixapp",
+};
+
+const getTizenURL = (appid, operation = "default") => {
+  return `https://www.youi.tv?yioperation=${operation}&yiappid=${appid}`;
+};
+
 const getPrimeURL = (id) => {
   switch (platform) {
     case "iOS":
     case "tvOS":
       return `aiv://aiv/play?asin=${id}`;
+    case "Tizen":
+      return getTizenURL(tizenAppIDs.prime);
     default:
       return `intent://watch.amazon.com/watch?asin=${id}`;
   }
 };
 
-const getYouTubeURL = (id) =>
-  platform === "tvOS"
-    ? `youtube://watch/${id}`
-    : `https://www.youtube.com/watch?v=${id}`;
+const getHBOMaxURL = (id) => {
+  switch (platform) {
+    case "iOS":
+    case "tvOS":
+      return `hbomax://play/${id}`;
+    case "Tizen":
+      return getTizenURL(tizenAppIDs.hbo);
+    default:
+      return `https://play.hbomax.com/play/${id}`;
+  }
+};
 
-const getNetflixURL = (id) => `https://www.netflix.com/title/${id}`;
+const getYouTubeURL = (id) => {
+  switch (platform) {
+    case "tvOS":
+      return `youtube://watch/${id}`;
+    case "Tizen":
+      return getTizenURL(tizenAppIDs.youtube);
+    default:
+      return `https://www.youtube.com/watch?v=${id}`;
+  }
+};
+
+const getNetflixURL = (id) => {
+  switch (platform) {
+    case "Tizen":
+      return getTizenURL(tizenAppIDs.netflix);
+    default:
+      return `https://www.netflix.com/title/${id}`;
+  }
+};
 
 const LinkButton = ({ title, onPress }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -52,7 +90,15 @@ const YiReactApp = () => {
       <LinkButton
         title="Prime Video"
         onPress={() => {
-          Linking.openURL(getPrimeURL("amzn1.dv.gti.8ab6ff1b-f125-99f1-940c-521d57520e24"));
+          Linking.openURL(
+            getPrimeURL("amzn1.dv.gti.8ab6ff1b-f125-99f1-940c-521d57520e24")
+          );
+        }}
+      />
+      <LinkButton
+        title="HBO Max"
+        onPress={() => {
+          Linking.openURL(getHBOMaxURL("TEST_ID"));
         }}
       />
       <LinkButton
